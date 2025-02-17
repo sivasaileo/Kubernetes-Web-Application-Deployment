@@ -47,13 +47,12 @@ jobs:
 
       - name: Set up kubeconfig
         run: |
-          mkdir -p $HOME/.kube
           echo "$KUBECONFIG" > $HOME/.kube/config
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
       
 
       - name: Deploy to Kubernetes
         run: |
           kubectl set image deployment/static-portfolio-website static-portfolio-website=sivasaileo/static-portfolio-website:${{ github.sha }} -n sivasai
           kubectl rollout status deployment/static-portfolio-website -n sivasai
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
