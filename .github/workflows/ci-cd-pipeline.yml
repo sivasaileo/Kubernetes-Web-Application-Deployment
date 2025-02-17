@@ -41,17 +41,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up kubeconfig
-      run: |
-        mkdir -p $HOME/.kube  # Ensure .kube directory exists
-        echo "$KUBECONFIG" > $HOME/.kube/config
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube  # Ensure .kube directory exists
+          echo "$KUBECONFIG" | base64 --decode > $HOME/.kube/config
 
-    - name: Deploy to Kubernetes
-      run: |
-        kubectl set image deployment/static-portfolio-website static-portfolio-website=sivasaileo/static-portfolio-website:latest -n sivasai
-        kubectl rollout status deployment/static-portfolio-website -n sivasai
-      env:
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/static-portfolio-website static-portfolio-website=sivasaileo/static-portfolio-website:${{ github.sha }} -n sivasai
+            kubectl rollout status deployment/static-portfolio-website -n sivasai
+
+    env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
