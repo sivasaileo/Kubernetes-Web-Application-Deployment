@@ -56,7 +56,6 @@
 
 #     env:
 #         KUBECONFIG: ${{ secrets.KUBECONFIG }}
-
 name: CI/CD Pipeline for Kubernetes
 
 on:
@@ -108,6 +107,7 @@ jobs:
 
       - name: Set up Kubeconfig
         run: |
+          mkdir -p $HOME/.kube
           echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
       - name: Deploy to Kubernetes
