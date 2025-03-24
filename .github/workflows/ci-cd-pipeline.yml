@@ -56,6 +56,8 @@
 
 #     env:
 #         KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+
 name: CI/CD Pipeline for Kubernetes
 
 on:
@@ -108,9 +110,12 @@ jobs:
       - name: Set up Kubeconfig
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
           kubectl set image deployment/static-portfolio-website static-portfolio-website=sivasaileo/static-portfolio-website:${{ github.sha }} -n sivasai
           kubectl rollout status deployment/static-portfolio-website -n sivasai
+
+    env:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
